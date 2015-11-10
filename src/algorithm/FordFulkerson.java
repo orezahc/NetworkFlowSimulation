@@ -1,13 +1,12 @@
 /* written by chchao Nov. 9, 2015*/
 
 package algorithm;
-
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Stack;
 import graphCode.*;
 
 public class FordFulkerson {
+	
 	//current assumption: getFirstEndpoint goes to getSecondEndpoint(it's a direction)
 	private static double dfs(SimpleGraph G, Vertex v, Stack path){				
 		v.setData(true);
@@ -49,7 +48,7 @@ public class FordFulkerson {
             Vertex v = (Vertex) i.next();
             v.setData(false);
 		}
-	}
+	} 
 	
 	private static void updateEdgeValue(SimpleGraph G, Edge e, double value){
 		Iterator i;
@@ -87,73 +86,77 @@ public class FordFulkerson {
 		}
 	}
 	
+	public static double FordFulkerson(SimpleGraph G){
+		Iterator i;
+		Vertex v = null;
+		Edge e = null;
+		double totalCapacity=0, capacity=0;
+		Stack<Edge> path = new Stack<Edge>(); 
+		
+		i = G.vertices();
+		if(i.hasNext())
+			v= (Vertex) i.next();
+		   
+		setAllVertexUndiscovered(G);
+   
+		for(;(capacity = dfs(G, v, path))!=0;
+    		totalCapacity += capacity, 
+    		path.clear(), 
+    		setAllVertexUndiscovered(G)){
+	   
+			System.out.print(capacity+" ");
+   
+			if(capacity!=0 && !path.isEmpty()){	    	   
+				while(!path.isEmpty()){
+					e = path.pop();
+					updateEdgeValue(G, e, capacity);
+					System.out.print(e.getFirstEndpoint().getName()+ "->");
+				}
+				System.out.println("t");
+			}
+		}
+		return totalCapacity;
+	}
+	
 	public static void main (String args[]) {
 		SimpleGraph G;
 		G = new SimpleGraph();
 		
 		GraphInput.LoadSimpleGraph(G, "src/test01.txt");//"src/graphGenerationCode/Random/n10-m10-cmin5-cmax10-f30.txt");
 		
-		Iterator i;
-		Vertex v = null;
-		Edge e;
-	   double totalCapacity = 0;
+//		Iterator i;
+//		Vertex v = null;
+//		Edge e;
+//	   
+//	   for (i= G.vertices(); i.hasNext(); ) {
+//	       v = (Vertex) i.next();
+//	       System.out.println("Vertex "+v.getName());
+//	       v.setData(false);
+//	       Iterator j;
+//	       
+//	       for (j = G.incidentEdges(v); j.hasNext();) {
+//	           e = (Edge) j.next();
+//	           if(e.getFirstEndpoint().getName().equals(v.getName()))
+//	        	   System.out.println("  edge " + e.getName() + " to " + e.getSecondEndpoint().getName() + " " + e.getData());// + " " + t.getMax() + " " + t.getUsed());
+//	       }
+//	       
+//	   }
 	   
-	   for (i= G.vertices(); i.hasNext(); ) {
-	       v = (Vertex) i.next();
-	       System.out.println("Vertex "+v.getName());
-	       v.setData(false);
-	       Iterator j;
-	       
-	       for (j = G.incidentEdges(v); j.hasNext();) {
-	           e = (Edge) j.next();
-	           if(e.getFirstEndpoint().getName().equals(v.getName()))
-	        	   System.out.println("  edge " + e.getName() + " to " + e.getSecondEndpoint().getName() + " " + e.getData());// + " " + t.getMax() + " " + t.getUsed());
-	       }
-	       
-	   }
+	   System.out.println(FordFulkerson(G));
 	   
-	   i = G.vertices();
-	   if(i.hasNext())
-	    	v= (Vertex) i.next();
-	    
-	   Stack path = new Stack(); 
-	   
-	   double capacity;
-	   setAllVertexUndiscovered(G);
-	   
-	   for(;(capacity = dfs(G, v, path))!=0;
-	    		totalCapacity += capacity, 
-	    		path.clear(), 
-	    		setAllVertexUndiscovered(G)){
-		   
-	       System.out.print(capacity+" ");
-	       
-	       if(capacity!=0 && !path.isEmpty()){	    	   
-	    	   while(!path.isEmpty()){
-	    		   e = (Edge)path.pop();
-	    		   updateEdgeValue(G, e, capacity);
-	    		   System.out.print(e.getFirstEndpoint().getName()+ "->");
-	    	   }
-	    	   System.out.println("t");
-	       }
-	   }
-	   
-	   
-	   for (i= G.vertices(); i.hasNext(); ) {
-	       v = (Vertex) i.next();
-	       System.out.println("Vertex "+v.getName());
-	       v.setData(false);
-	       Iterator j;
-	       
-	       for (j = G.incidentEdges(v); j.hasNext();) {
-	           e = (Edge) j.next();
-	           if(e.getFirstEndpoint().getName().equals(v.getName()))
-	        	   System.out.println("  edge " + e.getName() + " to " + e.getSecondEndpoint().getName() + " " + e.getData());// + " " + t.getMax() + " " + t.getUsed());
-	       }
-	       
-	   }
-	   
-	   System.out.println(totalCapacity);
+//	   for (i= G.vertices(); i.hasNext(); ) {
+//	       v = (Vertex) i.next();
+//	       System.out.println("Vertex "+v.getName());
+//	       v.setData(false);
+//	       Iterator j;
+//	       
+//	       for (j = G.incidentEdges(v); j.hasNext();) {
+//	           e = (Edge) j.next();
+//	           if(e.getFirstEndpoint().getName().equals(v.getName()))
+//	        	   System.out.println("  edge " + e.getName() + " to " + e.getSecondEndpoint().getName() + " " + e.getData());// + " " + t.getMax() + " " + t.getUsed());
+//	       }
+//	       
+//	   }
 	}
 	
 }
